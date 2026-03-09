@@ -2,8 +2,9 @@ import requests
 
 def emotion_detector(text_to_analyse):
     """
-    This function sends text to Watson NLP Emotion Prediction API
+    This function sends text to the Watson NLP Emotion Prediction API
     and returns formatted emotion scores including dominant emotion.
+    It also handles error code 400.
     """
 
     url = "https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict"
@@ -20,7 +21,11 @@ def emotion_detector(text_to_analyse):
 
     response = requests.post(url, json=input_json, headers=headers)
 
+    if response.status_code == 400:
+        return None
+
     if response.status_code == 200:
+
         response_json = response.json()
 
         emotions = response_json["emotionPredictions"][0]["emotion"]
@@ -43,5 +48,3 @@ def emotion_detector(text_to_analyse):
         }
 
         return result
-
-    return None
